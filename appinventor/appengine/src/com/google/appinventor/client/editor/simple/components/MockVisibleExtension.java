@@ -75,8 +75,10 @@ public class MockVisibleExtension extends MockVisibleComponent {
 
   @Override
   public void delete() {
+    Ode.CLog("delete...");
     super.delete();
     if (worker != null) {
+      Ode.CLog("terminate...");
       worker.terminate();
     }
   }

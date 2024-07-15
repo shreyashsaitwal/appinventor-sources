@@ -9,6 +9,7 @@ package com.google.appinventor.client.editor.simple.palette;
 import com.google.appinventor.client.ComponentsTranslation;
 import com.google.appinventor.client.editor.simple.components.MockComponent;
 import com.google.appinventor.client.editor.simple.components.MockComponentsUtil;
+import com.google.appinventor.client.editor.simple.components.MockVisibleExtension;
 import com.google.appinventor.client.widgets.dnd.DragSourcePanel;
 import com.google.appinventor.client.widgets.dnd.DragSourceSupport;
 import com.google.appinventor.client.widgets.dnd.DropTarget;
@@ -124,10 +125,17 @@ public class SimplePaletteItem extends DragSourcePanel {
    * @return mock component
    */
   public MockComponent createMockComponent() {
+    // This method is called "everywhere" for nearly all actions
     cacheInternalComponentPrototype();
 
     MockComponent returnedComponentPrototype = componentPrototype;
-    componentPrototype = null;
+
+    // We just reset this (avoid duplicate creations) for non-mock extensions
+    if (!(returnedComponentPrototype instanceof MockVisibleExtension)) {
+      componentPrototype = null;
+    }
+    // However, the code above causes a memory leak. We lose track of the previous component, and never destroy it.
+
     return returnedComponentPrototype;
   }
 
@@ -135,11 +143,13 @@ public class SimplePaletteItem extends DragSourcePanel {
    * Returns whether this palette item creates components with a visual representation.
    */
   public boolean isVisibleComponent() {
+    // This method is being invoked from all dragEnter events
     cacheInternalComponentPrototype();
     return componentPrototype.isVisibleComponent();
   }
 
   private void cacheInternalComponentPrototype() {
+    // This method is invoked both from dragEvents and actual creation
     if (componentPrototype == null) {
       componentPrototype = scd.createMockComponentFromPalette();
     }
