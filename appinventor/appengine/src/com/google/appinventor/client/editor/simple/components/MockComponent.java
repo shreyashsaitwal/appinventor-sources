@@ -319,6 +319,7 @@ public abstract class MockComponent extends Composite implements PropertyChangeL
    * @param editor  editor of source file the component belongs to
    */
   MockComponent(SimpleEditor editor, String type, Image iconImage) {
+    Ode.CLog("MockComponent.constructor: " + type);
     this.editor = editor;
     this.type = type;
     this.iconImage = iconImage;
@@ -1148,6 +1149,7 @@ public abstract class MockComponent extends Composite implements PropertyChangeL
   }
 
   public void delete() {
+    Ode.CLog("delete");
     this.editor.getProjectEditor().clearLocation(getName());
     // Pass true to indicate that the component is being permanently deleted.
     getContainer().removeComponent(this, true);

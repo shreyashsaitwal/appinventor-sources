@@ -425,6 +425,7 @@ public final class SimpleComponentDescriptor {
    * @return mock component
    */
   public MockComponent createMockComponentFromPalette() {
+    Ode.CLog("createMockComponentFromPalette: " + name);
     MockComponent mockComponent = createMockComponent(name,
         COMPONENT_DATABASE.getComponentType(name), editor);
     mockComponent.onCreateFromPalette();
