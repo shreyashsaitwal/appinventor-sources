@@ -102,6 +102,8 @@ public abstract class MockComponent extends Composite implements PropertyChangeL
   private static final int ICON_IMAGE_HEIGHT = 16;
   public static final int BORDER_SIZE = 2 + 2; // see ode-SimpleMockComponent in Ya.css
 
+  protected boolean isDrop = false;
+
   /**
    * This class defines the dialog box for renaming a component.
    */
@@ -319,6 +321,7 @@ public abstract class MockComponent extends Composite implements PropertyChangeL
    * @param editor  editor of source file the component belongs to
    */
   MockComponent(SimpleEditor editor, String type, Image iconImage) {
+    Ode.CLog("MockComponent.constructor: " + type);
     this.editor = editor;
     this.type = type;
     this.iconImage = iconImage;
@@ -1148,6 +1151,7 @@ public abstract class MockComponent extends Composite implements PropertyChangeL
   }
 
   public void delete() {
+    Ode.CLog("delete");
     this.editor.getProjectEditor().clearLocation(getName());
     // Pass true to indicate that the component is being permanently deleted.
     getContainer().removeComponent(this, true);
@@ -1275,6 +1279,10 @@ public abstract class MockComponent extends Composite implements PropertyChangeL
 
     // Set the new type
     properties.getProperty(property).setType(type);
+  }
+
+  public void setIsDrop(boolean isDrop) {
+    this.isDrop = isDrop;
   }
 
   public native void setShouldCancel(Event event, boolean cancelable)/*-{

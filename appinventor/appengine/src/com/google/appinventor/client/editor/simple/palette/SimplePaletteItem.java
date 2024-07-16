@@ -9,6 +9,7 @@ package com.google.appinventor.client.editor.simple.palette;
 import com.google.appinventor.client.ComponentsTranslation;
 import com.google.appinventor.client.editor.simple.components.MockComponent;
 import com.google.appinventor.client.editor.simple.components.MockComponentsUtil;
+import com.google.appinventor.client.editor.simple.components.MockVisibleExtension;
 import com.google.appinventor.client.widgets.dnd.DragSourcePanel;
 import com.google.appinventor.client.widgets.dnd.DragSourceSupport;
 import com.google.appinventor.client.widgets.dnd.DropTarget;
@@ -123,25 +124,40 @@ public class SimplePaletteItem extends DragSourcePanel {
    *
    * @return mock component
    */
-  public MockComponent createMockComponent() {
-    cacheInternalComponentPrototype();
+  public MockComponent createMockComponent(boolean isDrop) {
+    // This method is called "everywhere" for nearly all actions
+    cacheInternalComponentPrototype(isDrop);
 
     MockComponent returnedComponentPrototype = componentPrototype;
-    componentPrototype = null;
+
+    // We just reset this (avoid duplicate creations) for non-mock extensions
+    // if (!(returnedComponentPrototype instanceof MockVisibleExtension)) {
+      componentPrototype = null;
+    // }
+    // However, the code above causes a memory leak. We lose track of the previous component, and never destroy it.
+
     return returnedComponentPrototype;
+  }
+
+  public void triggerDeleteCachedComponent() {
+    if (componentPrototype != null && componentPrototype instanceof MockVisibleExtension) {
+      ((MockVisibleExtension) componentPrototype).cleanUpWorker();
+    }
   }
 
   /**
    * Returns whether this palette item creates components with a visual representation.
    */
   public boolean isVisibleComponent() {
-    cacheInternalComponentPrototype();
+    // This method is being invoked from all dragEnter events
+    cacheInternalComponentPrototype(false);
     return componentPrototype.isVisibleComponent();
   }
 
-  private void cacheInternalComponentPrototype() {
+  private void cacheInternalComponentPrototype(boolean isDrop) {
+    // This method is invoked both from dragEvents and actual creation
     if (componentPrototype == null) {
-      componentPrototype = scd.createMockComponentFromPalette();
+      componentPrototype = scd.createMockComponentFromPalette(isDrop);
     }
   }
 
@@ -154,7 +170,7 @@ public class SimplePaletteItem extends DragSourcePanel {
 
   @Override
   public Widget createDragWidget(int x, int y) {
-    MockComponent component = createMockComponent();
+    MockComponent component = createMockComponent(false);
     // Some components override getPreferredWidth/Height because getOffsetWidth/Height (which is
     // what MockComponentsUtil.getPreferredSizeOfDetachedWidget uses) returns very inaccurate
     // values. These components can give us the width/height even when the component is not

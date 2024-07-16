@@ -119,7 +119,7 @@ public final class SimpleNonVisibleComponentsPanel extends Composite implements 
 
   @Override
   public void onDrop(DragSource source, int x, int y, int offsetX, int offsetY) {
-    MockComponent sourceComponent = ((SimplePaletteItem) source).createMockComponent();
+    MockComponent sourceComponent = ((SimplePaletteItem) source).createMockComponent(true);
 
     // Add component to the form
     form.addComponent(sourceComponent);
