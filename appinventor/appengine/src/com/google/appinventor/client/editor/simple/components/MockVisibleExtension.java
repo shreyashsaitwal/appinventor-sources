@@ -1,7 +1,6 @@
 package com.google.appinventor.client.editor.simple.components;
 
 import com.google.appinventor.client.Ode;
-import com.google.appinventor.client.OdeAsyncCallback;
 import com.google.appinventor.client.editor.simple.SimpleEditor;
 import com.google.appinventor.client.utils.Blob;
 import com.google.appinventor.client.utils.Blob.BlobOptions;
@@ -9,7 +8,6 @@ import com.google.appinventor.client.utils.Worker;
 import com.google.appinventor.client.utils.JsURL;
 import com.google.appinventor.client.utils.Promise;
 import com.google.appinventor.client.utils.Worker.MessageEvent;
-import com.google.appinventor.client.widgets.dnd.DragSource;
 import com.google.appinventor.shared.rpc.project.ChecksumedFileException;
 import com.google.appinventor.shared.rpc.project.ChecksumedLoadFile;
 import com.google.gwt.user.client.ui.*;
@@ -76,8 +74,13 @@ public class MockVisibleExtension extends MockVisibleComponent {
   @Override
   public void delete() {
     super.delete();
+    cleanUpWorker();
+  }
+
+  public void cleanUpWorker() {
+    Ode.CLog("cleanUpWorker");
     if (worker != null) {
-      Ode.CLog("terminate...");
+      Ode.CLog("worker.terminate");
       worker.terminate();
     }
   }

@@ -131,12 +131,18 @@ public class SimplePaletteItem extends DragSourcePanel {
     MockComponent returnedComponentPrototype = componentPrototype;
 
     // We just reset this (avoid duplicate creations) for non-mock extensions
-    if (!(returnedComponentPrototype instanceof MockVisibleExtension)) {
+    // if (!(returnedComponentPrototype instanceof MockVisibleExtension)) {
       componentPrototype = null;
-    }
+    // }
     // However, the code above causes a memory leak. We lose track of the previous component, and never destroy it.
 
     return returnedComponentPrototype;
+  }
+
+  public void triggerDeleteCachedComponent() {
+    if (componentPrototype != null && componentPrototype instanceof MockVisibleExtension) {
+      ((MockVisibleExtension) componentPrototype).cleanUpWorker();
+    }
   }
 
   /**
