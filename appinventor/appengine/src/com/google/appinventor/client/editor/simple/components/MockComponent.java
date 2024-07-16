@@ -102,6 +102,8 @@ public abstract class MockComponent extends Composite implements PropertyChangeL
   private static final int ICON_IMAGE_HEIGHT = 16;
   public static final int BORDER_SIZE = 2 + 2; // see ode-SimpleMockComponent in Ya.css
 
+  protected boolean isDrop = false;
+
   /**
    * This class defines the dialog box for renaming a component.
    */
@@ -1277,6 +1279,10 @@ public abstract class MockComponent extends Composite implements PropertyChangeL
 
     // Set the new type
     properties.getProperty(property).setType(type);
+  }
+
+  public void setIsDrop(boolean isDrop) {
+    this.isDrop = isDrop;
   }
 
   public native void setShouldCancel(Event event, boolean cancelable)/*-{

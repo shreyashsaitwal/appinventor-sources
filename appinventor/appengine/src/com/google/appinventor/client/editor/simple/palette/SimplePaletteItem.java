@@ -124,9 +124,9 @@ public class SimplePaletteItem extends DragSourcePanel {
    *
    * @return mock component
    */
-  public MockComponent createMockComponent() {
+  public MockComponent createMockComponent(boolean isDrop) {
     // This method is called "everywhere" for nearly all actions
-    cacheInternalComponentPrototype();
+    cacheInternalComponentPrototype(isDrop);
 
     MockComponent returnedComponentPrototype = componentPrototype;
 
@@ -150,14 +150,14 @@ public class SimplePaletteItem extends DragSourcePanel {
    */
   public boolean isVisibleComponent() {
     // This method is being invoked from all dragEnter events
-    cacheInternalComponentPrototype();
+    cacheInternalComponentPrototype(false);
     return componentPrototype.isVisibleComponent();
   }
 
-  private void cacheInternalComponentPrototype() {
+  private void cacheInternalComponentPrototype(boolean isDrop) {
     // This method is invoked both from dragEvents and actual creation
     if (componentPrototype == null) {
-      componentPrototype = scd.createMockComponentFromPalette();
+      componentPrototype = scd.createMockComponentFromPalette(isDrop);
     }
   }
 
@@ -170,7 +170,7 @@ public class SimplePaletteItem extends DragSourcePanel {
 
   @Override
   public Widget createDragWidget(int x, int y) {
-    MockComponent component = createMockComponent();
+    MockComponent component = createMockComponent(false);
     // Some components override getPreferredWidth/Height because getOffsetWidth/Height (which is
     // what MockComponentsUtil.getPreferredSizeOfDetachedWidget uses) returns very inaccurate
     // values. These components can give us the width/height even when the component is not

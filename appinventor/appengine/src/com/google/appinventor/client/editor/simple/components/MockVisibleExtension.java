@@ -42,7 +42,12 @@ public class MockVisibleExtension extends MockVisibleComponent {
   @Override
   public void onCreateFromPalette() {
     super.onCreateFromPalette();
-    Ode.CLog("initing...");
+    Ode.CLog("initing... isDrop: " + this.isDrop);
+
+    if (!this.isDrop) {
+      return;
+    }
+
     Promise.<ChecksumedLoadFile>call(
                 "Server error: could not mock script for component: " + getVisibleTypeName(),
                 cb -> Ode.getInstance().getProjectService().load2(projectId, mockFileId, cb))

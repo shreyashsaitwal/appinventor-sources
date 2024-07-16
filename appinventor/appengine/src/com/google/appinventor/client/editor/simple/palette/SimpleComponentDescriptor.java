@@ -424,10 +424,11 @@ public final class SimpleComponentDescriptor {
    *
    * @return mock component
    */
-  public MockComponent createMockComponentFromPalette() {
+  public MockComponent createMockComponentFromPalette(boolean isDrop) {
     Ode.CLog("createMockComponentFromPalette: " + name);
     MockComponent mockComponent = createMockComponent(name,
         COMPONENT_DATABASE.getComponentType(name), editor);
+    mockComponent.setIsDrop(isDrop);
     mockComponent.onCreateFromPalette();
     return mockComponent;
   }
